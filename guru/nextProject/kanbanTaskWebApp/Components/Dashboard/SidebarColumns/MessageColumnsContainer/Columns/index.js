@@ -502,6 +502,7 @@ export default function Columns({
             }
           }}
           onClick={(event) => {
+            console.log("this is onClick");
             selectingTaskBtn({
               event,
               renderContextColumnsComponent,

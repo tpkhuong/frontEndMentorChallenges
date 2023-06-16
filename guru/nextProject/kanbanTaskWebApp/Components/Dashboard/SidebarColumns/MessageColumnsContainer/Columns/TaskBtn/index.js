@@ -1,6 +1,11 @@
 import React from "react";
 import TaskBtnStyles from "./TaskBtn.module.css";
 import { VscOpenPreview } from "react-icons/vsc";
+import {
+  dragStartSelectTaskBtn,
+  swapTabIndex,
+  localStorageSwapIndex,
+} from "../columnsHelpers";
 import { BoardTaskRenderContext } from "../../../../Context";
 
 export default function TaskBtn({
@@ -32,6 +37,11 @@ export default function TaskBtn({
           onDragStart={(event) => {
             // console.log("this is drag");
             // console.log(event.target);
+            dragStartSelectTaskBtn({
+              event,
+              swapTabIndex,
+              localStorageSwapIndex,
+            });
             const selectedTaskBtn = event.target.closest("BUTTON");
             if (selectedTaskBtn) {
               // we want status of task btn and index (data-orderindex and data-typeofstatus) to access the obj in local storage
@@ -42,7 +52,6 @@ export default function TaskBtn({
                 JSON.stringify({ status, index })
               );
               console.log(selectedTaskBtn);
-              return;
             }
           }}
           onDragEnter={(event) => {
@@ -120,6 +129,11 @@ export default function TaskBtn({
           onDragStart={(event) => {
             console.log("this is drag");
             console.log(event.target);
+            dragStartSelectTaskBtn({
+              event,
+              swapTabIndex,
+              localStorageSwapIndex,
+            });
             const selectedTaskBtn = event.target.closest("BUTTON");
             if (selectedTaskBtn) {
               // we want status of task btn and index (data-orderindex and data-typeofstatus) to access the obj in local storage
@@ -143,7 +157,6 @@ export default function TaskBtn({
                 .setAttribute("data-dragstarted", "true");
 
               console.log(selectedTaskBtn);
-              return;
             }
           }}
           onDragEnter={(event) => {
@@ -546,6 +559,10 @@ export function onDropEvent({ event, renderContextTaskBtn }) {
 
   console.log("drag drop");
 }
+
+/**
+ * notes
+ * **/
 
 function notes() {
   <button

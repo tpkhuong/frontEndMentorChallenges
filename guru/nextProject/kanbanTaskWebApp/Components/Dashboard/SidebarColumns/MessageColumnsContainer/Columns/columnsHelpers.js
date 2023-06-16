@@ -629,12 +629,12 @@ export function selectingTaskBtn({
           currentlyDragDropSelected.removeAttribute("id");
           clickedBtn.setAttribute("id", "drag-drop-selected");
           // currentlyDragDropSelected.removeAttribute("id");
-
+          // swap attr on elements
           swapTabIndex({
             previousSelected: currentlyDragDropSelected,
             selected: clickedBtn,
           });
-
+          // swap values in obj
           localStorageSwapIndex({
             previousSelected:
               board.columns[statusOfSelectedTaskBtn][
@@ -642,8 +642,174 @@ export function selectingTaskBtn({
               ],
             selected: board.columns[statusOfClickedBtn][orderIndexOfClickedBtn],
           });
-
+          // swap attr on elements
           swapDragDropSelected({
+            previousSelected: currentlyDragDropSelected,
+            selected: clickedBtn,
+          });
+          // swap values in obj
+          swapTaskBtnSelectedProperty({
+            previousSelected:
+              board.columns[statusOfSelectedTaskBtn][
+                orderIndexOfSelectedTaskBtn
+              ],
+            selected: board.columns[statusOfClickedBtn][orderIndexOfClickedBtn],
+          });
+        }
+
+        if (clickedBtn == isTabIndexZeroAssignedToTaskBtn) return;
+
+        swapTabIndex({
+          previousSelected: isTabIndexZeroAssignedToTaskBtn,
+          selected: clickedBtn,
+        });
+
+        localStorageSwapIndex({
+          previousSelected:
+            board.columns[statusOfTaskBtnWithTabIndexZero][
+              orderIndexOfTaskBtnWithTabIndexZero
+            ],
+          selected: board.columns[statusOfClickedBtn][orderIndexOfClickedBtn],
+        });
+
+        return;
+      }
+
+      localStorage.setItem("currentBoard", JSON.stringify(board));
+      user.boards[board.index] = board;
+
+      localStorage.setItem("currentUser", JSON.stringify(user));
+
+      clickedBtn.focus();
+      return;
+    }
+  }
+}
+
+export function dragStartSelectTaskBtn({
+  event,
+  swapTabIndex,
+  localStorageSwapIndex,
+}) {
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+  const board = JSON.parse(localStorage.getItem("currentBoard"));
+
+  const clickedBtn = event.target.closest("BUTTON");
+  console.log(document.activeElement);
+  console.log(clickedBtn);
+  if (clickedBtn) {
+    console.log(event.type);
+    // check if there is a currently selected task btn for drag and drop
+    const currentlyDragDropSelected =
+      document.getElementById("drag-drop-selected");
+
+    const statusOfSelectedTaskBtn = currentlyDragDropSelected
+      ? currentlyDragDropSelected.getAttribute("data-typeofstatus")
+      : null;
+
+    const orderIndexOfSelectedTaskBtn = currentlyDragDropSelected
+      ? currentlyDragDropSelected.getAttribute("data-orderindex")
+      : null;
+    // find current focus element
+    // const currentFocusedElement = document.activeElement;
+    // get status of clicked task btn
+    const statusOfClickedBtn = clickedBtn.getAttribute("data-typeofstatus");
+    // order index of click btn
+    const orderIndexOfClickedBtn = Number(
+      clickedBtn.getAttribute("data-orderindex")
+    );
+    console.log(document.activeElement);
+
+    const isTabIndexZeroAssignedToTaskBtn = document.querySelector(
+      "#columns-container-selector [tabindex='0']"
+    );
+    // isTabIndexZeroAssignedToTaskBtn
+    const statusOfTaskBtnWithTabIndexZero =
+      isTabIndexZeroAssignedToTaskBtn.getAttribute("data-typeofstatus");
+
+    const orderIndexOfTaskBtnWithTabIndexZero = Number(
+      isTabIndexZeroAssignedToTaskBtn.getAttribute("data-orderindex")
+    );
+
+    if (!currentlyDragDropSelected) {
+      // desktop and mobile will be different
+
+      // desktop
+      if (window.innerWidth >= 1400) {
+        if (clickedBtn == isTabIndexZeroAssignedToTaskBtn) return;
+
+        swapTabIndex({
+          previousSelected: isTabIndexZeroAssignedToTaskBtn,
+          selected: clickedBtn,
+        });
+
+        localStorageSwapIndex({
+          previousSelected:
+            board.columns[statusOfTaskBtnWithTabIndexZero][
+              orderIndexOfTaskBtnWithTabIndexZero
+            ],
+          selected: board.columns[statusOfClickedBtn][orderIndexOfClickedBtn],
+        });
+
+        return;
+      }
+
+      console.log("before we save to local storage");
+      localStorage.setItem("currentBoard", JSON.stringify(board));
+      user.boards[board.index] = board;
+
+      localStorage.setItem("currentUser", JSON.stringify(user));
+
+      clickedBtn.focus();
+
+      return;
+    }
+    // touchstart and mousedown will have same algorithm when a task btn
+    // has id drag-drop-selected
+    console.log(currentlyDragDropSelected);
+    if (currentlyDragDropSelected) {
+      console.log("this is fun");
+      // desktop
+      if (window.innerWidth >= 1400) {
+        //selected element with id "message-columns" data-dragstarted
+        const dragStarted = document
+          .getElementById("message-columns")
+          .getAttribute("data-dragstarted");
+
+        if (currentlyDragDropSelected == clickedBtn && dragStarted === "true") {
+          console.log("same task btn");
+          // do nothing
+          return;
+          // currentlyDragDropSelected.removeAttribute("id");
+        }
+
+        if (currentlyDragDropSelected != clickedBtn && dragStarted === "true") {
+          console.log("different task btn");
+          // remove id "drag-drop-selected" on current task btn with "drag-drop-selected"
+          // add "drag-drop-selected" to clicked task btn
+          currentlyDragDropSelected.removeAttribute("id");
+          clickedBtn.setAttribute("id", "drag-drop-selected");
+          // currentlyDragDropSelected.removeAttribute("id");
+          // swap attr on elements
+          swapTabIndex({
+            previousSelected: currentlyDragDropSelected,
+            selected: clickedBtn,
+          });
+          // swap values in obj
+          localStorageSwapIndex({
+            previousSelected:
+              board.columns[statusOfSelectedTaskBtn][
+                orderIndexOfSelectedTaskBtn
+              ],
+            selected: board.columns[statusOfClickedBtn][orderIndexOfClickedBtn],
+          });
+          // swap attr on elements
+          swapDragDropSelected({
+            previousSelected: currentlyDragDropSelected,
+            selected: clickedBtn,
+          });
+          // swap values in obj
+          swapTaskBtnSelectedProperty({
             previousSelected:
               board.columns[statusOfSelectedTaskBtn][
                 orderIndexOfSelectedTaskBtn
@@ -2884,11 +3050,21 @@ export function localStorageSwapIndex({ previousSelected, selected }) {
 }
 
 export function swapDragDropSelected({ previousSelected, selected }) {
+  console.log(previousSelected);
   // if algorithm returns truthy
   // we will remove id="drag-drop-selected" from the element returned by calling
   previousSelected.removeAttribute("id");
   // then apply id="drag-drop-selected" to clicked task btn
   selected.setAttribute("id", "drag-drop-selected");
+}
+
+export function swapTaskBtnSelectedProperty({ previousSelected, selected }) {
+  console.log(previousSelected);
+  // if algorithm returns truthy
+  // we will remove id="drag-drop-selected" from the element returned by calling
+  previousSelected.isSelected = false;
+  // then apply id="drag-drop-selected" to clicked task btn
+  selected.isSelected = true;
 }
 
 function openViewModal({
