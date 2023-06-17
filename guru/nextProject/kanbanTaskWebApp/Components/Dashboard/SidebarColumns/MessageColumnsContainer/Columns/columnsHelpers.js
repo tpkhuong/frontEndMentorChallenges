@@ -109,7 +109,7 @@ export function selectingTaskBtn({
     const orderIndexOfClickedBtn = Number(
       clickedBtn.getAttribute("data-orderindex")
     );
-    console.log(document.activeElement);
+    // console.log(document.activeElement);
     // touchstart
     // check if current focus element is a task btn
     // const isTaskBtn = currentFocusedElement.getAttribute("data-typeofstatus");
@@ -184,41 +184,59 @@ export function selectingTaskBtn({
             .getElementById("message-columns")
             .setAttribute("data-counter", "1");
 
+          localStorage.setItem("currentBoard", JSON.stringify(board));
+          user.boards[board.index] = board;
+
+          localStorage.setItem("currentUser", JSON.stringify(user));
+
+          clickedBtn.focus();
           return;
         }
         // clicking on task btn after first load
         // if clicked btn has tabindex == "0" assign string "drag-drop-selected"
-        if (clickedBtn.getAttribute("tabindex") === "0") {
-          // we want status of task btn and index (data-orderindex and data-typeofstatus) to access the obj in local storage
-          const status = clickedBtn.getAttribute("data-typeofstatus");
-          const index = Number(clickedBtn.getAttribute("data-orderindex"));
-          const selectedTaskObj = {
-            status,
-            index,
-          };
+        if (
+          document
+            .getElementById("message-columns")
+            .getAttribute("data-counter") === "1"
+        ) {
+          if (clickedBtn.getAttribute("tabindex") === "0") {
+            // we want status of task btn and index (data-orderindex and data-typeofstatus) to access the obj in local storage
+            const status = clickedBtn.getAttribute("data-typeofstatus");
+            const index = Number(clickedBtn.getAttribute("data-orderindex"));
+            const selectedTaskObj = {
+              status,
+              index,
+            };
 
-          localStorage.setItem("dragSelected", JSON.stringify(selectedTaskObj));
-          console.log("tabindex 0");
-          clickedBtn.setAttribute("id", "drag-drop-selected");
+            localStorage.setItem(
+              "dragSelected",
+              JSON.stringify(selectedTaskObj)
+            );
+            console.log("tabindex 0");
+            clickedBtn.setAttribute("id", "drag-drop-selected");
+            // change value of isSelected in obj to true
+            board.columns[statusOfClickedBtn][
+              orderIndexOfClickedBtn
+            ].isSelected = true;
+          }
+          // if clicked btn has tabindex == "-1" swap tabindex on element and element obj
+          if (clickedBtn.getAttribute("tabindex") === "-1") {
+            console.log("tabindex -1");
+            swapTabIndex({
+              previousSelected: isTabIndexZeroAssignedToTaskBtn,
+              selected: clickedBtn,
+            });
+
+            localStorageSwapIndex({
+              previousSelected:
+                board.columns[statusOfTaskBtnWithTabIndexZero][
+                  orderIndexOfTaskBtnWithTabIndexZero
+                ],
+              selected:
+                board.columns[statusOfClickedBtn][orderIndexOfClickedBtn],
+            });
+          }
         }
-        // if clicked btn has tabindex == "-1" swap tabindex on element and element obj
-        if (clickedBtn.getAttribute("tabindex") === "-1") {
-          console.log("tabindex -1");
-          swapTabIndex({
-            previousSelected: isTabIndexZeroAssignedToTaskBtn,
-            selected: clickedBtn,
-          });
-
-          localStorageSwapIndex({
-            previousSelected:
-              board.columns[statusOfTaskBtnWithTabIndexZero][
-                orderIndexOfTaskBtnWithTabIndexZero
-              ],
-            selected: board.columns[statusOfClickedBtn][orderIndexOfClickedBtn],
-          });
-        }
-
-        return;
       }
       // desktop
       if (window.innerWidth >= 1400) {
@@ -236,8 +254,6 @@ export function selectingTaskBtn({
             ],
           selected: board.columns[statusOfClickedBtn][orderIndexOfClickedBtn],
         });
-
-        return;
       }
       //   console.log(clickedBtn);
       //   console.log(currentFocusedElement);
@@ -542,21 +558,22 @@ export function selectingTaskBtn({
       if (window.innerWidth <= 768) {
         // when drag and drop is selected and data-counter is 0 focus task btn
         console.log(onDropEvent, "onDropEvent");
+        // wont need algorithm for when drag drop is selected and data-counter == "0"
+        // onBlur will not set data-counter to be "0" because we want to run drag drop algorithm
+        // if (
+        //   document
+        //     .getElementById("message-columns")
+        //     .getAttribute("data-counter") === "0"
+        // ) {
+        //   console.log("counter is 0");
+        //   clickedBtn.focus();
 
-        if (
-          document
-            .getElementById("message-columns")
-            .getAttribute("data-counter") === "0"
-        ) {
-          console.log("counter is 0");
-          clickedBtn.focus();
+        //   document
+        //     .getElementById("message-columns")
+        //     .setAttribute("data-counter", "1");
 
-          document
-            .getElementById("message-columns")
-            .setAttribute("data-counter", "1");
-
-          return;
-        }
+        //   return;
+        // }
         // console.log(clickedBtn, "clickedBtn");
         // console.log(
         //   isTabIndexZeroAssignedToTaskBtn,
@@ -579,10 +596,15 @@ export function selectingTaskBtn({
           if (clickedBtn.getAttribute("tabindex") === "0") {
             // console.log("tabindex 0");
             clickedBtn.removeAttribute("id");
+            // change value of isSelected to false
+            board.columns[statusOfClickedBtn][
+              orderIndexOfClickedBtn
+            ].isSelected = false;
           }
           console.log(clickedBtn.getAttribute("tabindex"));
           // if clicked btn has tabindex == "-1" swap tabindex on element and element obj
           if (clickedBtn.getAttribute("tabindex") === "-1") {
+            console.log("running drag drop");
             // run onDragEvent algorithm when currentlyDragDropSelected is truthy
             onDropEvent({
               event,
@@ -603,27 +625,23 @@ export function selectingTaskBtn({
             // });
           }
         }
-
-        return;
       }
       // desktop
       if (window.innerWidth >= 1400) {
         //selected element with id "message-columns" data-dragstarted
-        const dragStarted = document
-          .getElementById("message-columns")
-          .getAttribute("data-dragstarted");
-
-        if (
-          currentlyDragDropSelected == clickedBtn &&
-          dragStarted === "false"
-        ) {
+        // const dragStarted = document
+        //   .getElementById("message-columns")
+        //   .getAttribute("data-dragstarted");
+        // console.log(dragStarted);
+        if (currentlyDragDropSelected == clickedBtn) {
           currentlyDragDropSelected.removeAttribute("id");
+          // update isSelected value in obj
+          board.columns[statusOfSelectedTaskBtn][
+            orderIndexOfSelectedTaskBtn
+          ].isSelected = false;
         }
 
-        if (
-          currentlyDragDropSelected != clickedBtn &&
-          dragStarted === "false"
-        ) {
+        if (currentlyDragDropSelected != clickedBtn) {
           // remove id "drag-drop-selected" on current task btn with "drag-drop-selected"
           // add "drag-drop-selected" to clicked task btn
           currentlyDragDropSelected.removeAttribute("id");
@@ -657,22 +675,20 @@ export function selectingTaskBtn({
           });
         }
 
-        if (clickedBtn == isTabIndexZeroAssignedToTaskBtn) return;
+        // if (clickedBtn == isTabIndexZeroAssignedToTaskBtn) return;
 
-        swapTabIndex({
-          previousSelected: isTabIndexZeroAssignedToTaskBtn,
-          selected: clickedBtn,
-        });
+        // swapTabIndex({
+        //   previousSelected: isTabIndexZeroAssignedToTaskBtn,
+        //   selected: clickedBtn,
+        // });
 
-        localStorageSwapIndex({
-          previousSelected:
-            board.columns[statusOfTaskBtnWithTabIndexZero][
-              orderIndexOfTaskBtnWithTabIndexZero
-            ],
-          selected: board.columns[statusOfClickedBtn][orderIndexOfClickedBtn],
-        });
-
-        return;
+        // localStorageSwapIndex({
+        //   previousSelected:
+        //     board.columns[statusOfTaskBtnWithTabIndexZero][
+        //       orderIndexOfTaskBtnWithTabIndexZero
+        //     ],
+        //   selected: board.columns[statusOfClickedBtn][orderIndexOfClickedBtn],
+        // });
       }
 
       localStorage.setItem("currentBoard", JSON.stringify(board));
@@ -737,7 +753,7 @@ export function dragStartSelectTaskBtn({
       // desktop
       if (window.innerWidth >= 1400) {
         if (clickedBtn == isTabIndexZeroAssignedToTaskBtn) return;
-
+        console.log("after return");
         swapTabIndex({
           previousSelected: isTabIndexZeroAssignedToTaskBtn,
           selected: clickedBtn,
@@ -750,14 +766,14 @@ export function dragStartSelectTaskBtn({
             ],
           selected: board.columns[statusOfClickedBtn][orderIndexOfClickedBtn],
         });
-
-        return;
       }
 
       console.log("before we save to local storage");
+      console.log(board);
+      // console.log(JSON.parse(localStorage.getItem("currentBoard")));
       localStorage.setItem("currentBoard", JSON.stringify(board));
       user.boards[board.index] = board;
-
+      console.log(user, "user");
       localStorage.setItem("currentUser", JSON.stringify(user));
 
       clickedBtn.focus();
@@ -818,22 +834,22 @@ export function dragStartSelectTaskBtn({
           });
         }
 
-        if (clickedBtn == isTabIndexZeroAssignedToTaskBtn) return;
+        // if (clickedBtn == isTabIndexZeroAssignedToTaskBtn) return;
 
-        swapTabIndex({
-          previousSelected: isTabIndexZeroAssignedToTaskBtn,
-          selected: clickedBtn,
-        });
+        // swapTabIndex({
+        //   previousSelected: isTabIndexZeroAssignedToTaskBtn,
+        //   selected: clickedBtn,
+        // });
 
-        localStorageSwapIndex({
-          previousSelected:
-            board.columns[statusOfTaskBtnWithTabIndexZero][
-              orderIndexOfTaskBtnWithTabIndexZero
-            ],
-          selected: board.columns[statusOfClickedBtn][orderIndexOfClickedBtn],
-        });
+        // localStorageSwapIndex({
+        //   previousSelected:
+        //     board.columns[statusOfTaskBtnWithTabIndexZero][
+        //       orderIndexOfTaskBtnWithTabIndexZero
+        //     ],
+        //   selected: board.columns[statusOfClickedBtn][orderIndexOfClickedBtn],
+        // });
 
-        return;
+        // return;
       }
 
       localStorage.setItem("currentBoard", JSON.stringify(board));
@@ -3042,6 +3058,8 @@ export function swapTabIndex({ previousSelected, selected }) {
 }
 
 export function localStorageSwapIndex({ previousSelected, selected }) {
+  console.log(previousSelected, "previousSelected");
+  console.log(selected, "selected");
   // update tabIndex of current focus task btn obj in local storage
   previousSelected.tabIndex = "-1";
 

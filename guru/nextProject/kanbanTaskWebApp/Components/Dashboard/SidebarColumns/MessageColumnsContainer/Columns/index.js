@@ -503,6 +503,7 @@ export default function Columns({
           }}
           onClick={(event) => {
             console.log("this is onClick");
+            console.log(JSON.parse(localStorage.getItem("currentUser")));
             selectingTaskBtn({
               event,
               renderContextColumnsComponent,

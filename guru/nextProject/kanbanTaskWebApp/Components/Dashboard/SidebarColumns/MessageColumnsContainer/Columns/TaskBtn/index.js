@@ -37,20 +37,34 @@ export default function TaskBtn({
           onDragStart={(event) => {
             // console.log("this is drag");
             // console.log(event.target);
+            // change value of data-dragstarted to "true"
+            document
+              .getElementById("message-columns")
+              .setAttribute("data-dragstarted", "true");
+
             dragStartSelectTaskBtn({
               event,
               swapTabIndex,
               localStorageSwapIndex,
             });
+
             const selectedTaskBtn = event.target.closest("BUTTON");
             if (selectedTaskBtn) {
               // we want status of task btn and index (data-orderindex and data-typeofstatus) to access the obj in local storage
               const status = selectedTaskBtn.getAttribute("data-typeofstatus");
-              const index = selectedTaskBtn.getAttribute("data-orderindex");
+              const index = Number(
+                selectedTaskBtn.getAttribute("data-orderindex")
+              );
+              const selectedTaskObj = {
+                status,
+                index,
+              };
               localStorage.setItem(
                 "dragSelected",
-                JSON.stringify({ status, index })
+                JSON.stringify(selectedTaskObj)
               );
+              console.log(JSON.parse(localStorage.getItem("dragSelected")));
+
               console.log(selectedTaskBtn);
             }
           }}
@@ -93,8 +107,31 @@ export default function TaskBtn({
             console.log("drag drop");
           }}
           onBlur={(event) => {
-            console.log(event.target);
-            console.log("im not focus");
+            const taskBtn = event.target.closest("BUTTON");
+            // at tablet and mobile size
+            // when dont want to assign "0" to attr data-counter
+            // after task btn loses focus. we want to run drag/drop algorithm
+            if (
+              window.innerWidth <= 768 &&
+              document
+                .getElementById("message-columns")
+                .getAttribute("data-counter") == "1" &&
+              document.getElementById("drag-drop-selected")
+            ) {
+              return;
+            }
+
+            if (taskBtn.getAttribute("data-typeofstatus")) {
+              document
+                .getElementById("message-columns")
+                .getAttribute("data-counter") == "1"
+                ? document
+                    .getElementById("message-columns")
+                    .setAttribute("data-counter", "0")
+                : null;
+              // console.log(event.target);
+              // console.log("im not focus");
+            }
           }}
         >
           <h3 className={TaskBtnStyles[`task-title`]}>{children}</h3>
@@ -129,6 +166,11 @@ export default function TaskBtn({
           onDragStart={(event) => {
             console.log("this is drag");
             console.log(event.target);
+            // change value of data-dragstarted to "true"
+            document
+              .getElementById("message-columns")
+              .setAttribute("data-dragstarted", "true");
+
             dragStartSelectTaskBtn({
               event,
               swapTabIndex,
@@ -150,11 +192,6 @@ export default function TaskBtn({
                 JSON.stringify(selectedTaskObj)
               );
               console.log(JSON.parse(localStorage.getItem("dragSelected")));
-
-              // change value of data-dragstarted to "true"
-              document
-                .getElementById("message-columns")
-                .setAttribute("data-dragstarted", "true");
 
               console.log(selectedTaskBtn);
             }
@@ -411,9 +448,10 @@ export function onDropEvent({ event, renderContextTaskBtn }) {
         // update array in currentBoard
         currentBoard.columns[grabbedElementValues.status] = newOrderedArray;
         currentUser.boards[currentBoard.index] = currentBoard;
-
+        console.log(currentUser, "currentUser");
         localStorage.setItem("currentBoard", JSON.stringify(currentBoard));
         localStorage.setItem("currentUser", JSON.stringify(currentUser));
+        console.log(JSON.parse(localStorage.getItem("currentUser")));
         // render column with new objs array
         renderContextTaskBtn.setStateFuncs[
           `${grabbedElementValues.status}Column`
@@ -452,10 +490,14 @@ export function onDropEvent({ event, renderContextTaskBtn }) {
         });
         // update array in currentBoard
         currentBoard.columns[grabbedElementValues.status] = reorderedArray;
+
         currentUser.boards[currentBoard.index] = currentBoard;
+        console.log(currentUser, "currentUser");
 
         localStorage.setItem("currentBoard", JSON.stringify(currentBoard));
         localStorage.setItem("currentUser", JSON.stringify(currentUser));
+        console.log(JSON.parse(localStorage.getItem("currentUser")));
+
         // render column with new objs array
         renderContextTaskBtn.setStateFuncs[
           `${grabbedElementValues.status}Column`
@@ -553,6 +595,7 @@ export function onDropEvent({ event, renderContextTaskBtn }) {
       .setAttribute("data-dragstarted", "false");
 
     droppedTaskBtn.setAttribute("data-dragover", "false");
+    console.log(JSON.parse(localStorage.getItem("currentUser")));
     return;
   }
   // console.log(event.target);
