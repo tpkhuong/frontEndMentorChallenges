@@ -64,6 +64,7 @@ export default function StatusMenu({
       {initialStatusValues.isStatusMenuShown ? (
         <ul
           role="menubar"
+          data-isviewmodal={`${isViewTask}`}
           className={StatusMenuStyles[`status-menu-container`]}
           onClick={(event) => {
             const statusBtnClicked = event.target.closest("BUTTON");

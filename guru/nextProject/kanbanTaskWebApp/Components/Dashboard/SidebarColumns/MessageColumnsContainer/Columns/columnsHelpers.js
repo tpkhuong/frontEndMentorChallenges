@@ -2924,9 +2924,19 @@ export function selectOrUnselectedBtnForDragAndDrop({
   user,
   board,
 }) {
+  // assistive text container
+  const assistiveTextContainer = document.getElementById(
+    "assistive-text-selector"
+  );
   // we want status and index of selected task btn
   // apply id drag-drop-selected to selected task btn
   if (!clickedTaskBtn.getAttribute("id")) {
+    // assistive text algorithm goes here
+    // let user know of status changes
+    // title of task, status of grabbed task grabbed current position 1 of 6. status column
+    // no status change title of task, current status dropped, final position 3 of 6, status column
+    // status change
+    // status change, title of task, new status done, final position 5 of 8, status column
     clickedTaskBtn.setAttribute("id", "drag-drop-selected");
     // to assign boolean true for property isSelected in local storage
     board.columns[statusOfTaskBtn][indexOfClickedTaskBtn].isSelected = true;
@@ -2935,6 +2945,12 @@ export function selectOrUnselectedBtnForDragAndDrop({
     return;
   }
   if (clickedTaskBtn.getAttribute("id") == "drag-drop-selected") {
+    // assistive text algorithm goes here
+    // let user know of status changes
+    // title of task, status of grabbed task grabbed current position 1 of 6. status column
+    // no status change title of task, current status dropped, final position 3 of 6, status column
+    // status change
+    // status change, title of task, new status done, final position 5 of 8, status column
     clickedTaskBtn.removeAttribute("id");
     // to assign boolean false for property isSelected in local storage
     board.columns[statusOfTaskBtn][indexOfClickedTaskBtn].isSelected = false;

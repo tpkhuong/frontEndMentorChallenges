@@ -446,18 +446,25 @@ export function onDropEvent({ event, renderContextTaskBtn }) {
           obj.index = index;
         });
         // update array in currentBoard
-        currentBoard.columns[grabbedElementValues.status] = newOrderedArray;
-        currentUser.boards[currentBoard.index] = currentBoard;
-        console.log(currentUser, "currentUser");
-        localStorage.setItem("currentBoard", JSON.stringify(currentBoard));
-        localStorage.setItem("currentUser", JSON.stringify(currentUser));
-        console.log(JSON.parse(localStorage.getItem("currentUser")));
+        // currentBoard.columns[grabbedElementValues.status] = newOrderedArray;
+        // currentUser.boards[currentBoard.index] = currentBoard;
+        // console.log(currentUser, "currentUser");
+        // localStorage.setItem("currentBoard", JSON.stringify(currentBoard));
+        // localStorage.setItem("currentUser", JSON.stringify(currentUser));
+        // console.log(JSON.parse(localStorage.getItem("currentUser")));
         // render column with new objs array
         renderContextTaskBtn.setStateFuncs[
           `${grabbedElementValues.status}Column`
         ](newOrderedArray);
 
         setTimeout(() => {
+          // didnt save to local storage on mobile when localStorage.setItem was called outside setTimeout
+          currentBoard.columns[grabbedElementValues.status] = newOrderedArray;
+          currentUser.boards[currentBoard.index] = currentBoard;
+          console.log(currentUser, "currentUser");
+          localStorage.setItem("currentBoard", JSON.stringify(currentBoard));
+          localStorage.setItem("currentUser", JSON.stringify(currentUser));
+          console.log(JSON.parse(localStorage.getItem("currentUser")));
           // focus element after render of column
           const focusElementValues = newOrderedArray[droppedTaskBtnPosition];
           const elementToFocus = document.getElementById(
@@ -488,21 +495,31 @@ export function onDropEvent({ event, renderContextTaskBtn }) {
         reorderedArray.forEach(function updateIndex(obj, index) {
           obj.index = index;
         });
-        // update array in currentBoard
-        currentBoard.columns[grabbedElementValues.status] = reorderedArray;
+        // // update array in currentBoard
+        // currentBoard.columns[grabbedElementValues.status] = reorderedArray;
 
-        currentUser.boards[currentBoard.index] = currentBoard;
-        console.log(currentUser, "currentUser");
+        // currentUser.boards[currentBoard.index] = currentBoard;
+        // console.log(currentUser, "currentUser");
 
-        localStorage.setItem("currentBoard", JSON.stringify(currentBoard));
-        localStorage.setItem("currentUser", JSON.stringify(currentUser));
-        console.log(JSON.parse(localStorage.getItem("currentUser")));
+        // localStorage.setItem("currentBoard", JSON.stringify(currentBoard));
+        // localStorage.setItem("currentUser", JSON.stringify(currentUser));
+        // console.log(JSON.parse(localStorage.getItem("currentUser")));
 
         // render column with new objs array
         renderContextTaskBtn.setStateFuncs[
           `${grabbedElementValues.status}Column`
         ](reorderedArray);
         setTimeout(() => {
+          // didnt save to local storage on mobile when localStorage.setItem was called outside setTimeout
+          // update array in currentBoard
+          currentBoard.columns[grabbedElementValues.status] = reorderedArray;
+
+          currentUser.boards[currentBoard.index] = currentBoard;
+          console.log(currentUser, "currentUser");
+
+          localStorage.setItem("currentBoard", JSON.stringify(currentBoard));
+          localStorage.setItem("currentUser", JSON.stringify(currentUser));
+          console.log(JSON.parse(localStorage.getItem("currentUser")));
           // focus element after render of column
           const elementObjValues = reorderedArray[droppedTaskBtnPosition];
           const focusElement = document.getElementById(
@@ -556,26 +573,30 @@ export function onDropEvent({ event, renderContextTaskBtn }) {
       ) {
         obj.index = index;
       });
-      // update data in local storage
-      currentBoard.columns[`${grabbedElementValues.status}`] =
-        arrayWithoutGrabbedElementObj;
 
-      currentBoard.columns[`${droppedTaskBtnStatus}`] =
-        concatArraysWithGrabbedElementObj;
-
-      currentUser.boards[currentBoard.index] = currentBoard;
-
-      localStorage.setItem("currentBoard", JSON.stringify(currentBoard));
-      localStorage.setItem("currentUser", JSON.stringify(currentUser));
       // re-render two columns
       renderContextTaskBtn.setStateFuncs[
         `${grabbedElementValues.status}Column`
       ](arrayWithoutGrabbedElementObj);
+
       renderContextTaskBtn.setStateFuncs[`${droppedTaskBtnStatus}Column`](
         concatArraysWithGrabbedElementObj
       );
+
       // focus grabbed element in new column
       setTimeout(() => {
+        // didnt save to local storage on mobile when localStorage.setItem was called outside setTimeout
+        // update data in local storage
+        currentBoard.columns[`${grabbedElementValues.status}`] =
+          arrayWithoutGrabbedElementObj;
+
+        currentBoard.columns[`${droppedTaskBtnStatus}`] =
+          concatArraysWithGrabbedElementObj;
+
+        currentUser.boards[currentBoard.index] = currentBoard;
+
+        localStorage.setItem("currentBoard", JSON.stringify(currentBoard));
+        localStorage.setItem("currentUser", JSON.stringify(currentUser));
         // focus element
         const focusElement = document.getElementById(
           `${droppedTaskBtnStatus}-column-selector`
