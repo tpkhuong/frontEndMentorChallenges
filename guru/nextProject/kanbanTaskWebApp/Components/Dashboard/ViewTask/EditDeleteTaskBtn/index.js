@@ -17,6 +17,7 @@ export default function EditDeleteTaskBtnAndModal({ children }) {
         id="launch-edit-delete-task-modal-btn"
         className={EditDeleteTaskStyles[`edit-delete-task-modal-btn`]}
         aria-label={editDeleteTaskModalObj.ariaLabelContent}
+        data-firstitem="true"
         onClick={(event) => {
           if (!editDeleteTaskModalObj.renderEditDeleteBtn) {
             setEditDeleteTaskModal((prevValues) => {

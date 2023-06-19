@@ -32,7 +32,13 @@ export default function StatusMenu({
         type="button"
         onClick={(event) => {
           // show modal
+          const clickedStatusMenuBtn = event.target.closest("BUTTON");
+          console.log(clickedStatusMenuBtn);
           if (!initialStatusValues.isStatusMenuShown) {
+            setTimeout(() => {
+              // focus first button of status menu
+              clickedStatusMenuBtn.nextElementSibling.childNodes[0].firstElementChild.focus();
+            }, 80);
             setStatusMenu((previousValues) => {
               return {
                 ...previousValues,

@@ -13,6 +13,7 @@ import {
   whenTaskHasOneSubtask,
   removeItem,
 } from "./viewTaskHelpers";
+import { keyboardModalTabbingAndSpaceKey } from "../../../utils/sharedHelpers";
 
 const strArray = [
   "Research competitor pricing and business models",
@@ -44,6 +45,7 @@ export default function ViewTask({ children }) {
         <div className={ViewTaskStyles[`view-task-modal-bg`]}>
           <div
             tabIndex="-1"
+            onKeyDown={keyboardModalTabbingAndSpaceKey}
             data-fadeoutviewtask="false"
             data-hideviewtask="false"
             aria-modal="true"
@@ -125,6 +127,7 @@ export default function ViewTask({ children }) {
             {/* only call column component setStateFunc when user change current status of task */}
             {/* make it a close btn instead */}
             <button
+              data-lastitem="true"
               onClick={(event) => {
                 const task = JSON.parse(localStorage.getItem("currentTask"));
                 // focus task btn of current task
