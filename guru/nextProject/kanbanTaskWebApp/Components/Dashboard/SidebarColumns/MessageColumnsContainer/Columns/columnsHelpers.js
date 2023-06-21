@@ -2931,6 +2931,14 @@ export function selectOrUnselectedBtnForDragAndDrop({
   // we want status and index of selected task btn
   // apply id drag-drop-selected to selected task btn
   if (!clickedTaskBtn.getAttribute("id")) {
+    const title = board.columns[statusOfTaskBtn][indexOfClickedTaskBtn].title;
+    const grabbedPosition = indexOfClickedTaskBtn;
+    const totalNumberOfTasks = board.columns[statusOfTaskBtn].length;
+    console.log(title, "title");
+    console.log(grabbedPosition, "grabbedPosition");
+    console.log(totalNumberOfTasks, "totalNumberOfTasks");
+    const buildUpAssistiveText = `${title}, grabbed current position ${grabbedPosition} of ${totalNumberOfTasks}. ${statusOfTaskBtn} column`;
+    console.log(buildUpAssistiveText, "buildUpAssistiveText");
     // assistive text algorithm goes here
     // let user know of status changes
     // title of task, status of grabbed task grabbed current position 1 of 6. status column
