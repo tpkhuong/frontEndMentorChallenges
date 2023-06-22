@@ -2924,6 +2924,7 @@ export function selectOrUnselectedBtnForDragAndDrop({
   user,
   board,
 }) {
+  const title = board.columns[statusOfTaskBtn][indexOfClickedTaskBtn].title;
   // assistive text container
   const assistiveTextContainer = document.getElementById(
     "assistive-text-selector"
@@ -2931,14 +2932,14 @@ export function selectOrUnselectedBtnForDragAndDrop({
   // we want status and index of selected task btn
   // apply id drag-drop-selected to selected task btn
   if (!clickedTaskBtn.getAttribute("id")) {
-    const title = board.columns[statusOfTaskBtn][indexOfClickedTaskBtn].title;
-    const grabbedPosition = indexOfClickedTaskBtn;
+    const grabbedPosition = indexOfClickedTaskBtn + 1;
     const totalNumberOfTasks = board.columns[statusOfTaskBtn].length;
     console.log(title, "title");
     console.log(grabbedPosition, "grabbedPosition");
     console.log(totalNumberOfTasks, "totalNumberOfTasks");
-    const buildUpAssistiveText = `${title}, grabbed current position ${grabbedPosition} of ${totalNumberOfTasks}. ${statusOfTaskBtn} column`;
-    console.log(buildUpAssistiveText, "buildUpAssistiveText");
+    const buildUpAssistiveTextGrabbed = `${title}, grabbed current position ${grabbedPosition} of ${totalNumberOfTasks}. ${statusOfTaskBtn} column`;
+    console.log(buildUpAssistiveTextGrabbed, "buildUpAssistiveTextGrabbed");
+    assistiveTextContainer.textContent = buildUpAssistiveTextGrabbed;
     // assistive text algorithm goes here
     // let user know of status changes
     // title of task, status of grabbed task grabbed current position 1 of 6. status column
@@ -2953,12 +2954,17 @@ export function selectOrUnselectedBtnForDragAndDrop({
     return;
   }
   if (clickedTaskBtn.getAttribute("id") == "drag-drop-selected") {
+    const droppedPosition = indexOfClickedTaskBtn + 1;
+    const totalNumberOfDroppedTask = board.columns[statusOfTaskBtn].length;
     // assistive text algorithm goes here
     // let user know of status changes
     // title of task, status of grabbed task grabbed current position 1 of 6. status column
     // no status change title of task, current status dropped, final position 3 of 6, status column
     // status change
     // status change, title of task, new status done, final position 5 of 8, status column
+    const buildUpAssistiveTextDropped = `${title}, dropped current position ${droppedPosition} of ${totalNumberOfDroppedTask}. ${statusOfTaskBtn} column`;
+    console.log(buildUpAssistiveTextDropped, "buildUpAssistiveTextDropped");
+    assistiveTextContainer.textContent = buildUpAssistiveTextDropped;
     clickedTaskBtn.removeAttribute("id");
     // to assign boolean false for property isSelected in local storage
     board.columns[statusOfTaskBtn][indexOfClickedTaskBtn].isSelected = false;
