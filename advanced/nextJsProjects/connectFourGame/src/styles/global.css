@@ -145,7 +145,7 @@
   /* headings */
   /* --font-family-poppins: "Poppins", sans-serif; */
   /* body, call-to-actions */
-  --font-plus-jakarta: "Plus Jakarta Sans", sans-serif;
+  --font-space-grotesk: "Space Grotesk", sans-serif;
   /* --font-family-barlow-condensed: "Barlow Condensed", sans-serif;
     --font-family-bellefair: "Bellefair", serif; */
   /* section bg img */
@@ -185,7 +185,7 @@ body {
 body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  font-family: var(--font-plus-jakarta);
+  font-family: var(--font-space-grotesk);
   /* color: var(--color-neutral-black); */
   font-size: var(--font-size-body);
 }
