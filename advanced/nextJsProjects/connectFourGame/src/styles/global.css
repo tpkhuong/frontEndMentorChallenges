@@ -15,26 +15,14 @@
 
 :root {
   /* primary */
-  --color-purple: hsl(242, 48%, 58%);
-  --color-purple-secondary: hsl(243, 100%, 82%);
-  --color-black: hsl(237, 100%, 4%);
-  --color-dark-bg: hsl(235, 16%, 15%);
-  --color-dark-grey: hsl(235, 12%, 19%);
-  --color-dark-lines: hsl(236, 11%, 27%);
-  --color-medium-grey: hsl(216, 15%, 57%);
-  --color-light-lines: hsl(221, 69%, 94%);
-  --color-light-bg: hsl(220, 69%, 97%);
-  --color-red: hsl(0, 78%, 63%);
-  --color-red-hover: hsl(0, 100%, 80%);
+  --color-dark-purple: hsl(257, 67%, 51%);
+  --color-purple: hsl(257, 100%, 64%);
+  --color-red: hsl(347, 97%, 70%);
+  --color-yellow: hsl(41, 100%, 70%);
 
   --color-neutral-black: hsl(0, 0%, 0%);
   --color-neutral-white: hsl(0, 0%, 100%);
 
-  --color-secondary-text-color: var(--color-medium-grey);
-  --modals-description-both: var(--color-medium-grey);
-  --toggle-icon: var(--color-medium-grey);
-
-  --color-linkedin: hsl(210, 90%, 40%);
   /* 250px */
   --heading-extra-lrg: 15.625rem;
   /* 56px */
