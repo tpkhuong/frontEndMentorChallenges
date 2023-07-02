@@ -5,6 +5,8 @@ import React from "react";
 export default function Page() {
   return (
     <React.Fragment>
+      {/* game options */}
+      {/* game rules */}
       <h1 className={PageStyles[`title`]}>Hello, next.js</h1>
       <PlayerDisplay isCpu={false} firstOrSecond="first" />
       <PlayerDisplay isCpu={false} firstOrSecond="second" />
